@@ -7,6 +7,7 @@ import React from 'react'
 import { SignupSchema } from '../Schemas/formSchema'
 import axios from 'axios'
 import { useRouter } from 'next/navigation'
+import { useToast } from '@/components/ui/use-toast'
 
 
 const initialValues = {
@@ -17,16 +18,27 @@ const initialValues = {
 }
 const page = () => {
     const router = useRouter()
+    const {toast} = useToast()
     const { values , errors ,touched, handleBlur , handleChange , handleSubmit} = useFormik({
         initialValues: initialValues,
         validationSchema: SignupSchema,
         onSubmit: async(values) => {
            try{
             const response = await axios.post("/api/users/signup",values)
-            console.log( "Signup success", response.data)
-            router.push("/login")
+            if(response.data.status === 200){
+                console.log( "Signup success", response.data)
+                router.push("/login")
+            }else{
+                toast({
+                    variant: "destructive",
+                    title: "Alert !",
+                    description: response.data.error,
+                  })
+            }
+           
            }catch(error){
             console.log(error)
+           
            }
            
         }
