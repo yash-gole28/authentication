@@ -27,6 +27,11 @@ const login = () => {
         if(response.data.status === 200){
           console.log(response.data.status)
           localStorage.setItem("My-token",JSON.stringify(response.data.tokenData))
+          toast({
+            variant: "default",
+            title: "Welcome",
+            description: "Successfully logged in",
+          })
           router.push('/')
         }else{
           toast({
